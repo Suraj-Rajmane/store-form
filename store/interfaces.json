@@ -2,7 +2,9 @@
   "form": {
     "component": "Form",
     "composition": "children",
-    "allowed": ["form-success"]
+    "allowed": [
+      "form-success"
+    ]
   },
   "form-field-group": {
     "component": "FormFieldGroup"
@@ -34,5 +36,11 @@
   },
   "form-success": {
     "composition": "children"
+  },
+  "google-recaptcha": {
+    "component": "Recaptcha"
+  },
+  "add-another-image": {
+    "component": "AddAnotherImage"
   }
 }

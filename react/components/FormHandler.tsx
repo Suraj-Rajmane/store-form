@@ -14,6 +14,24 @@ import createDocumentV2 from '../graphql/createDocument.graphql'
 import { FormProps } from '../typings/FormProps'
 import { parseMasterDataError } from '../logic/masterDataError'
 import { useSubmitReducer, SubmitContext } from '../logic/formState'
+import ReCAPTCHA from "react-google-recaptcha";
+import { useRef } from 'react'
+
+
+function recaptchaValidation(recaptchaValue: string | null | undefined) {
+  return new Promise((resolve, reject) => {
+
+    if (recaptchaValue == "") {
+      reject("Recaptcha Error")
+    } else {
+      console.log(recaptchaValue, "This is the recaptchaValue")
+      resolve("Recaptcha Completed Successfully")
+
+    }
+
+
+  })
+}
 
 export const FormHandler: FC<{
   schema: JSONSchemaType
@@ -28,12 +46,31 @@ export const FormHandler: FC<{
 
   const [submitState, dispatchSubmitAction] = useSubmitReducer()
 
+  const recaptchaRef = useRef<ReCAPTCHA>(null)
+
   const onSubmit = useCallback(
     async ({ data, methods, event }: OnSubmitParameters) => {
       if (event) {
         event.preventDefault()
       }
       dispatchSubmitAction({ type: 'SET_LOADING' })
+
+      const recaptchaValue = recaptchaRef.current?.getValue()
+
+
+      try {
+        const response = await recaptchaValidation(recaptchaValue)
+        console.log(response)
+
+      } catch (error) {
+        console.log(error)
+
+        dispatchSubmitAction({ type: 'SET_RECAPTCHA_ERROR' })
+        return;
+
+      }
+
+
 
       await createDocumentMutation({
         variables: {
@@ -101,6 +138,11 @@ export const FormHandler: FC<{
     >
       <SubmitContext.Provider value={submitState}>
         {props.children}
+        <ReCAPTCHA
+          sitekey="6Lf90H4bAAAAAIS7l5JlzrkjASDbkEOcJXPWx6yn"
+          ref={recaptchaRef}
+
+        />
       </SubmitContext.Provider>
     </FormContext>
   )

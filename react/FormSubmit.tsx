@@ -15,6 +15,8 @@ const CSS_HANDLES = [
   'formSubmitButton',
   'formErrorServer',
   'formErrorUserInput',
+  'formRecaptchaError'
+
 ] as const
 
 const messages = defineMessages({
@@ -30,12 +32,17 @@ const messages = defineMessages({
     id: 'store/form.submit.error.serverError',
     defaultMessage: '',
   },
+
+  recaptchaError: {
+    id: 'store/form.submit.error.recaptchaError',
+    defineMessage: ''
+  }
 })
 
 export default function FormSubmit({
   label = messages.submitButton.id,
 }: FormSubmitProps) {
-  const { loading, userInputError, serverError } = useContext(SubmitContext)
+  const { loading, userInputError, serverError, recaptchaError } = useContext(SubmitContext)
   const handles = useCssHandles(CSS_HANDLES)
 
   return (
@@ -56,6 +63,13 @@ export default function FormSubmit({
         {serverError && (
           <Alert type="error">
             <IOMessage id={messages.serverError.id} />
+          </Alert>
+        )}
+      </div>
+      <div className={handles.formRecaptchaError}>
+        {recaptchaError && (
+          <Alert type="error">
+            <IOMessage id={messages.recaptchaError.id} />
           </Alert>
         )}
       </div>

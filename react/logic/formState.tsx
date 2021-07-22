@@ -5,6 +5,7 @@ const initialState: SubmittingState = {
   userInputError: null,
   serverError: null,
   success: null,
+  recaptchaError: false
 }
 
 function reducer(
@@ -18,6 +19,7 @@ function reducer(
         userInputError: null,
         serverError: null,
         success: null,
+        recaptchaError: false
       }
     }
     case 'SET_SUCCESS': {
@@ -26,6 +28,7 @@ function reducer(
         userInputError: false,
         serverError: null,
         success: true,
+        recaptchaError: false
       }
     }
     case 'SET_USER_INPUT_ERROR': {
@@ -44,6 +47,15 @@ function reducer(
         success: false,
       }
     }
+
+    case 'SET_RECAPTCHA_ERROR': {
+      return {
+        ...state,
+        loading: false,
+        recaptchaError: true,
+        success: false,
+      }
+    }
     default:
       return state
   }
@@ -54,6 +66,7 @@ export type SubmittingState = {
   userInputError: boolean | null
   serverError: boolean | null
   success: boolean | null
+  recaptchaError: boolean
 }
 
 export type SubmittingAction =
@@ -61,6 +74,7 @@ export type SubmittingAction =
   | { type: 'SET_SUCCESS' }
   | { type: 'SET_USER_INPUT_ERROR' }
   | { type: 'SET_SERVER_INTERNAL_ERROR' }
+  | { type: 'SET_RECAPTCHA_ERROR' }
 
 export const useSubmitReducer = () => {
   return useReducer(reducer, initialState)
